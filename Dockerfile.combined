@@ -1,0 +1,45 @@
+# SelfFit 통합 이미지 (backend + inference, CPU 전용).
+# Render 무료 티어(메모리 512MB) 배포용 — 한 컨테이너에서 inference 를 9000,
+# backend 를 $PORT(기본 8000)로 띄우고 backend 는 http://localhost:9000 으로 호출한다.
+# 로컬 개발용 docker compose(backend/, inference/ 각자 실행)는 그대로 두고 이 파일만 배포용으로 별도 사용.
+FROM python:3.11-slim
+
+ENV PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      libgl1 libglib2.0-0 curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# ---- inference 의존성 (CPU 전용 torch wheel) ----
+WORKDIR /srv/inference
+COPY inference/requirements.txt .
+RUN pip install torch==2.4.1 torchvision==0.19.1 --index-url https://download.pytorch.org/whl/cpu \
+    && pip install -r requirements.txt \
+    && pip uninstall -y jax jaxlib ml_dtypes opt_einsum scipy
+# mediapipe 가 강제로 끌어오지만 face_detection 솔루션에서는 쓰이지 않는 jax/scipy 스택 제거 (~470MB 절감, 임포트 확인됨)
+
+# ---- backend 의존성 (uv.lock 을 requirements 로 내보내 같은 환경에 설치) ----
+WORKDIR /srv/backend
+RUN pip install uv
+COPY backend/pyproject.toml backend/uv.lock ./
+RUN uv export --no-dev --no-hashes --frozen -o requirements.txt \
+    && pip install -r requirements.txt
+
+# ---- 앱 코드 ----
+COPY inference/app /srv/inference/app
+COPY backend/app /srv/backend/app
+
+# 실제로 쓰는 가중치만 포함 (emotionnet_v1.pth·meta.json 은 기본 설정에서 미사용 — 이미지 용량 절감)
+COPY inference/weights/l2cs_v1.pkl inference/weights/emotionnet_v2.pth inference/weights/former_dfer_v1.pth \
+     /srv/inference/weights/
+
+COPY start.sh /srv/start.sh
+RUN chmod +x /srv/start.sh
+
+ENV DEVICE=cpu \
+    MODEL_DIR=/srv/inference/weights \
+    INFERENCE_URL=http://localhost:9000
+
+WORKDIR /srv
+EXPOSE 8000
+CMD ["/srv/start.sh"]
