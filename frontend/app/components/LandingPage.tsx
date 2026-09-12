@@ -200,7 +200,7 @@ const LandingPage: React.FC = () => {
                 <img
                   src="/feature-gaze.png"
                   alt="디스플레이 중심의 시선 추적을 나타낸 일러스트"
-                  style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 8 }}
+                  style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block', borderRadius: 8 }}
                 />
               </div>
               <h3>실시간 시선 추적</h3>

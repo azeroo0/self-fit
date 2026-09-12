@@ -176,7 +176,7 @@ html, body { margin: 0; padding: 0; }
 }
 .selffit-app .feature-card h3 { font-size: 17px; margin: 0; letter-spacing: -0.01em; }
 .selffit-app .feature-card p { font-size: 13.8px; color: var(--ink); margin: 0; }
-.selffit-app .feature-visual { background: var(--tint); border-radius: 12px; padding: 16px; min-height: 130px; display: flex; align-items: center; justify-content: center; }
+.selffit-app .feature-visual { background: var(--tint); border-radius: 12px; padding: 16px; height: 150px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 
 .selffit-app .mini-chip-row { display: flex; gap: 8px; flex-wrap: wrap; }
 .selffit-app .mini-chip {
