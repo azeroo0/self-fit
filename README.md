@@ -4,6 +4,13 @@
 
 경기 AI 멤버십 채용연계형 교육 1차 프로젝트 (2026-09).
 
+## 배포
+- 프론트: https://self-fit-ashy.vercel.app
+- 백엔드: https://self-fit.onrender.com
+- 추론 서버(AI 분석): **배포하지 않음** — GPU 리소스 비용 문제로 로컬 실행만 지원
+
+배포본에서는 로그인, 세션 생성, 웹캠 프레임 전송, 녹화 업로드, 리포트 화면까지 정상 동작합니다. 다만 추론 서버가 없어 실제 시선·표정 분석 수치는 나오지 않고, 규칙 기반 폴백(질문 목록, 목업 알림 등)으로 동작합니다.
+
 ## 사용자 흐름
 ```
 로그인 → 질문 목록 확인 → 면접 시작(웹캠) → 질문별 답변 → 종료 → 리포트
@@ -65,8 +72,8 @@
 | Phase 0 | BE 골격, 로그인 연동, FE-BE-Supabase 연결 | 완료 |
 | Phase 1 | 세션·WebSocket·판정·리포트를 Mock으로 완성 | 완료 |
 | Phase 2 | 추론 서버, 실제 모델 연결 | 완료 |
-| Phase 3 | 영상 업로드 분석 | 완료 |
-| 배포 | fork 후 진행 | 진행 중 |
+| Phase 3 | 영상 업로드 분석 | 진행 중 |
+| 배포 | fork 후 진행 | 완료 |
 
 ## 참고
 - 데이터·모델: AI-Hub [디스플레이 중심 안구 움직임 영상 데이터](https://www.aihub.or.kr/aihubdata/data/view.do?dataSetSn=71421), [한국인 감정인식을 위한 복합 영상](https://aihub.or.kr/aihubdata/data/view.do?dataSetSn=82)
