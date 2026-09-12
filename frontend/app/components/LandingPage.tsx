@@ -100,6 +100,7 @@ const LandingPage: React.FC = () => {
             <a href="#feature">핵심 기능</a>
             <a href="#track">서비스 흐름</a>
             <a href="#experience">체험하기</a>
+            <Link href="/mypage">내 기록</Link>
           </div>
           <div className="nav-right">
             {signedIn ? (
