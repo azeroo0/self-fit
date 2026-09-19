@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import ToastStack, { ToastItem } from '../components/ToastStack';
 import { apiFetch, apiFetchRaw, getWsUrl } from '@/lib/api';
 import { getSupabase } from '@/lib/supabase';
@@ -91,6 +91,7 @@ let toastId = 0;
 
 function InterviewSession() {
   const router = useRouter();
+  const track = useSearchParams().get('track');
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [cameraError, setCameraError] = useState(false);
@@ -440,8 +441,9 @@ function InterviewSession() {
 
     (async () => {
       try {
-        const res = await apiFetch('/api/questions');
-        if (!res.ok) throw new Error(`GET /api/questions → ${res.status}`);
+        const url = track ? `/api/questions?track=${encodeURIComponent(track)}` : '/api/questions';
+        const res = await apiFetch(url);
+        if (!res.ok) throw new Error(`GET ${url} → ${res.status}`);
         const list: ApiQuestion[] = await res.json();
         const texts = [...list].sort((a, b) => a.sort_order - b.sort_order).map((q) => q.text);
         if (!cancelled && texts.length) setQuestions(texts);
@@ -612,5 +614,15 @@ export default function InterviewPage() {
     );
   }
 
-  return <InterviewSession />;
+  return (
+    <Suspense
+      fallback={
+        <div className="page-shell">
+          <div className="question-index">확인 중...</div>
+        </div>
+      }
+    >
+      <InterviewSession />
+    </Suspense>
+  );
 }

@@ -190,7 +190,7 @@ function HistoryList({ items, state }: { items: SessionItem[]; state: FetchState
       <div className="question-card">
         <p className="question-text">아직 진행한 면접이 없어요. 첫 모의면접을 시작해보세요</p>
         <div className="action-row">
-          <Link className="btn-solid" href="/interview">모의면접 시작하기 →</Link>
+          <Link className="btn-solid" href="/interview/setup">모의면접 시작하기 →</Link>
         </div>
       </div>
     );

@@ -115,7 +115,7 @@ const LandingPage: React.FC = () => {
             ) : (
               <Link className="nav-signin" href="/login">로그인</Link>
             )}
-            <Link className="nav-cta" href="/interview">모의면접 시작</Link>
+            <Link className="nav-cta" href="/interview/setup">모의면접 시작</Link>
           </div>
         </nav>
 
@@ -124,7 +124,7 @@ const LandingPage: React.FC = () => {
           <p className="hero-sub">웹캠으로 시선과 표정을 실시간 분석하고,<br />면접이 끝나면 행동 리포트로 확인합니다.</p>
           <div className="hero-ctas">
             <a className="btn-ghost" href="#feature">기능 살펴보기</a>
-            <Link className="btn-solid" href="/interview">모의면접 시작하기</Link>
+            <Link className="btn-solid" href="/interview/setup">모의면접 시작하기</Link>
           </div>
 
           <div className="laptop-wrap">
@@ -314,7 +314,7 @@ const LandingPage: React.FC = () => {
         <section className="cta-band">
           <h2>SelfFit</h2>
           <p>웹캠 앞에 앉는 순간부터 스스로 확인이 시작됩니다</p>
-          <Link className="btn-solid" href="/interview">모의면접 시작하기</Link>
+          <Link className="btn-solid" href="/interview/setup">모의면접 시작하기</Link>
         </section>
 
         <footer>

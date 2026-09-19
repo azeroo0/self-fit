@@ -14,10 +14,13 @@ def now() -> datetime:
     return datetime.now(UTC)
 
 
-def list_active_questions(db: DbSession) -> list[Question]:
-    return list(
-        db.scalars(select(Question).where(Question.is_active.is_(True)).order_by(Question.sort_order))
-    )
+def list_active_questions(db: DbSession, track: str | None = None) -> list[Question]:
+    stmt = select(Question).where(Question.is_active.is_(True))
+    if track and track != "general":
+        stmt = stmt.where(Question.track.in_([track, "general"]))
+    else:
+        stmt = stmt.where(Question.track == "general")
+    return list(db.scalars(stmt.order_by(Question.sort_order)))
 
 
 def create_session(db: DbSession, user_id: uuid.UUID, mode: str, question_ids: list[int] | None) -> Session:

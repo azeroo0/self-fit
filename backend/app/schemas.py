@@ -10,6 +10,7 @@ class QuestionOut(BaseModel):
     id: int
     text: str
     category: str | None = None
+    track: str
     sort_order: int
 
 

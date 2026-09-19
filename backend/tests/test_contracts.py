@@ -46,7 +46,7 @@ WS_EVENT_KEYS = {"type", "ts_ms", "event_type", "severity", "icon", "message"}
 
 def test_question_contract(client):
     q = client.get("/api/questions").json()[0]
-    assert set(q) == {"id", "text", "category", "sort_order"}
+    assert set(q) == {"id", "text", "category", "track", "sort_order"}
 
 
 def test_session_contracts(client):

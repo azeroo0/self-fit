@@ -25,6 +25,7 @@ class Question(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     text: Mapped[str] = mapped_column(Text, nullable=False)
     category: Mapped[str | None] = mapped_column(String(50))
+    track: Mapped[str] = mapped_column(String(20), nullable=False, default="general")
     sort_order: Mapped[int] = mapped_column(Integer, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
 
