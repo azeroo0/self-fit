@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import ThemeProvider from './components/ThemeProvider';
 
 export const metadata: Metadata = {
   title: 'SelfFit — AI 면접 자가진단',
@@ -10,7 +11,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ko">
       <body>
-        <div className="selffit-app">{children}</div>
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

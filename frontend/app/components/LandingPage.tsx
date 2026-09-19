@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { getSupabase } from '@/lib/supabase';
+import { useTheme } from './ThemeProvider';
 
 interface StatCard {
   figure: string;
@@ -48,9 +49,12 @@ const BLOBS = [
   { width: 260, height: 260, background: '#C9A6FF', top: '40%' as const, left: '50%' as const },
 ];
 
+const THEME_ICON = { light: '☀️', dark: '🌙', system: '🖥️' } as const;
+
 const LandingPage: React.FC = () => {
   const router = useRouter();
   const [signedIn, setSignedIn] = useState(false);
+  const { theme, cycleTheme } = useTheme();
 
   useEffect(() => {
     let supabase;
@@ -103,6 +107,15 @@ const LandingPage: React.FC = () => {
             <Link href="/mypage">내 기록</Link>
           </div>
           <div className="nav-right">
+            <button
+              className="theme-toggle"
+              type="button"
+              onClick={cycleTheme}
+              aria-label="테마 전환"
+              title="테마 전환"
+            >
+              {THEME_ICON[theme ?? 'system']}
+            </button>
             {signedIn ? (
               <button
                 className="nav-signin"
