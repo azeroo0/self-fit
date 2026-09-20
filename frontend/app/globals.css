@@ -217,7 +217,7 @@ html, body { margin: 0; padding: 0; }
   background: linear-gradient(135deg, var(--tint), var(--bg));
   display: flex; align-items: center; justify-content: center;
 }
-.selffit-app .track-visual--photo { background: none; }
+.selffit-app .track-visual--photo { background: #F4F3FB; }
 .selffit-app .device-section { padding: 20px 0 90px; text-align: center; }
 .selffit-app .device-row { display: flex; justify-content: center; align-items: flex-end; gap: 18px; flex-wrap: wrap; margin-top: 44px; }
 .selffit-app .device {
