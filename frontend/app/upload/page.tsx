@@ -22,7 +22,7 @@ const PHASE_PERCENT: Record<Exclude<Phase, 'idle'>, number> = {
 };
 
 const POLL_MS = 3000;
-const MAX_POLLS = 100; // 최대 약 5분
+const MAX_POLLS = 100;
 
 type ReportStatus = { metrics: string; stt: string; llm: string; recording: string };
 type ReportResp = { status?: ReportStatus };
@@ -85,7 +85,7 @@ export default function UploadPage() {
         if (!mountedRef.current) return;
 
         const res = await apiFetch(`/api/sessions/${session.id}/report`);
-        if (res.status === 409) continue; // 아직 분석이 끝나지 않음
+        if (res.status === 409) continue;
 
         if (!res.ok) throw new Error(`GET report → ${res.status}`);
         const data: ReportResp = await res.json();

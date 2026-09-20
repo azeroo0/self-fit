@@ -217,15 +217,6 @@ html, body { margin: 0; padding: 0; }
   background: linear-gradient(135deg, var(--tint), var(--bg));
   display: flex; align-items: center; justify-content: center;
 }
-.selffit-app .track-visual--photo { padding: 14px; }
-.selffit-app .visual-frame {
-  width: 100%; height: 100%; overflow: hidden;
-  background: #F4F3FB; border: 1px solid rgba(0,0,0,0.06); border-radius: 16px;
-  box-shadow: 0 10px 24px rgba(15,15,35,0.12);
-  padding: 12px;
-  display: flex; align-items: center; justify-content: center;
-}
-
 .selffit-app .device-section { padding: 20px 0 90px; text-align: center; }
 .selffit-app .device-row { display: flex; justify-content: center; align-items: flex-end; gap: 18px; flex-wrap: wrap; margin-top: 44px; }
 .selffit-app .device {
