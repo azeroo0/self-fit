@@ -4,12 +4,7 @@
 
 ## 실행
 
-```bash
-cd backend
-cp .env.example .env   # 값 채우기
-uv sync
-uv run uvicorn app.main:app --reload --port 8000
-```
+로컬 실행 명령은 [docs/DEVELOPMENT.md](../docs/DEVELOPMENT.md) 참고.
 
 - 헬스체크: http://localhost:8000/health
 - API 문서: http://localhost:8000/docs

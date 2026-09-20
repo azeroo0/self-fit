@@ -18,38 +18,7 @@
                           시선 이탈·긴장 표정·집중 저하 시 토스트 알림 (사용자가 켜고 끌 수 있음)
 ```
 
-## 시스템 흐름
-```
- 브라우저                    노트북 (로컬)                  노트북 GPU
-┌────────────┐  로그인   ┌────────────┐
-│ FE Next.js │─────────▶│ Supabase   │  인증 + PostgreSQL
-│            │◀─────────│            │
-│ 웹캠 3fps  │  토큰     └─────┬──────┘
-│            │  REST/WS ┌─────┴──────┐  JPEG 1장  ┌─────────────┐
-│            │─────────▶│ BE FastAPI │──────────▶│ 추론 서버    │ 얼굴 검출
-│            │◀─────────│ 세션·판정  │◀──────────│ 모델 3개    │ L2CS-Net (시선)
-└────────────┘ 토스트    │ 리포트     │  결과 JSON └─────────────┘ EmotionNet (감정)
-               리포트    └────────────┘                            Former-DFER (집중)
-```
-
-## 폴더
-| 폴더 | 담당 | 내용 |
-|---|---|---|
-| `frontend/` | FE | Next.js 14. 랜딩, 면접, 리포트, 업로드 화면 |
-| `backend/` | BE | FastAPI. 인증, 세션, WebSocket, 판정, 리포트 |
-| `inference/` | BE | 추론 서버 (Phase 2에서 생성). 모델 3개 + 얼굴 검출. **Docker로 실행** |
-| `ai/` | AI | 모델 학습·검증 코드 |
-
-## 시작하기
-| 파트 | 명령 |
-|---|---|
-| FE | `cd frontend && cp .env.local.example .env.local && npm install && npm run dev` → http://localhost:3000 |
-| BE | `cd backend && cp .env.example .env && uv sync && uv run uvicorn app.main:app --reload --port 8000` → http://localhost:8000/docs |
-| 추론 서버 (Phase 2 이후) | Docker Desktop 설치 후 `cd inference && docker compose up --build` → http://localhost:9000/v1/health |
-| 연결 확인 | 둘 다 띄운 뒤 http://localhost:3000/dev/connect |
-| 같은 Wi-Fi 팀원 | 각자 PC에서 FE만 띄우고 `.env.local`의 `NEXT_PUBLIC_API_URL`을 `http://<백엔드 노트북IP>:8000`으로. 절차는 `backend/docs/03-phase1-design.md` 10.2절 |
-
-`.env` 값(Supabase URL, 키)은 팀 채널에서 받습니다. 저장소에 올리지 않습니다.
+최신 시스템 흐름·폴더 구조·로컬 실행 방법은 [docs/DEVELOPMENT.md](DEVELOPMENT.md) 참고.
 
 ## 협업 규칙 요약
 - 모든 작업은 `dev` 브랜치 기준. 브랜치는 `파트/작업` 이름으로 따고 PR은 `dev`로.
@@ -59,12 +28,12 @@
 ## 문서
 | 읽을 사람 | 문서 |
 |---|---|
-| 전원 | [backend/guideline/00-summary.md](backend/guideline/00-summary.md) 백엔드 설계 요약 보고: 결정 사항, 현재 상태, 남은 일 |
-| 전원 | [backend/guideline/01-architecture.md](backend/guideline/01-architecture.md) 설계 개요 |
-| FE | [backend/guideline/02-for-frontend.md](backend/guideline/02-for-frontend.md) API·WebSocket 사용법 |
-| AI | [backend/guideline/03-for-ai.md](backend/guideline/03-for-ai.md) 모델 실행 위치, 납품 규약 |
-| 전원 | [backend/guideline/04-dev-workflow.md](backend/guideline/04-dev-workflow.md) 깃·로컬 실행 |
-| BE | [backend/docs/](backend/docs/) 기획·설계 상세 |
+| 전원 | [backend/guideline/00-summary.md](../backend/guideline/00-summary.md) 백엔드 설계 요약 보고: 결정 사항, 현재 상태, 남은 일 |
+| 전원 | [backend/guideline/01-architecture.md](../backend/guideline/01-architecture.md) 설계 개요 |
+| FE | [backend/guideline/02-for-frontend.md](../backend/guideline/02-for-frontend.md) API·WebSocket 사용법 |
+| AI | [backend/guideline/03-for-ai.md](../backend/guideline/03-for-ai.md) 모델 실행 위치, 납품 규약 |
+| 전원 | [backend/guideline/04-dev-workflow.md](../backend/guideline/04-dev-workflow.md) 깃·로컬 실행 |
+| BE | [backend/docs/](../backend/docs/) 기획·설계 상세 |
 
 ## 진행 단계
 | 단계 | 내용 | 상태 |
