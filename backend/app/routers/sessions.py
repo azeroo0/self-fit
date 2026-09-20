@@ -9,7 +9,15 @@ from sqlalchemy.orm import Session as DbSession
 from app.auth import CurrentUserDep
 from app.db import get_db
 from app.models import Event, Session
-from app.schemas import EventOut, SessionCreate, SessionList, SessionListItem, SessionOut, SessionQuestionOut
+from app.schemas import (
+    EventOut,
+    SessionCreate,
+    SessionList,
+    SessionListItem,
+    SessionOut,
+    SessionQuestionOut,
+    ShareLinkOut,
+)
 from app.services import recording_service, report_service, stt_service
 from app.services import session_service as svc
 
@@ -63,6 +71,7 @@ def list_(
             created_at=s.created_at,
             finished_at=s.finished_at,
             has_report=has,
+            share_token=s.share_token,
         )
         for s, has in rows
     ]
@@ -91,6 +100,18 @@ def delete(session_id: uuid.UUID, user: CurrentUserDep, db: DbDep):
     db.delete(s)
     db.commit()
     recording_service.delete(session_id)  # 세션 삭제 시 영상도 삭제 (개인정보)
+
+
+@router.post("/{session_id}/share", response_model=ShareLinkOut)
+def create_share(session_id: uuid.UUID, user: CurrentUserDep, db: DbDep):
+    s = svc.get_owned_session(db, session_id, uuid.UUID(user.id))
+    return ShareLinkOut(share_token=svc.create_share_link(db, s))
+
+
+@router.delete("/{session_id}/share", status_code=status.HTTP_204_NO_CONTENT)
+def delete_share(session_id: uuid.UUID, user: CurrentUserDep, db: DbDep):
+    s = svc.get_owned_session(db, session_id, uuid.UUID(user.id))
+    svc.revoke_share_link(db, s)
 
 
 @router.get("/{session_id}/events", response_model=list[EventOut])

@@ -45,6 +45,11 @@ class SessionListItem(BaseModel):
     created_at: datetime
     finished_at: datetime | None
     has_report: bool
+    share_token: str | None = None
+
+
+class ShareLinkOut(BaseModel):
+    share_token: str
 
 
 class SessionList(BaseModel):

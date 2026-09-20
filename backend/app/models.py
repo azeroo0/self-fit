@@ -39,6 +39,7 @@ class Session(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    share_token: Mapped[str | None] = mapped_column(String(64), unique=True)
 
     questions: Mapped[list["SessionQuestion"]] = relationship(
         back_populates="session", cascade="all, delete-orphan", order_by="SessionQuestion.order_index"

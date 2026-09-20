@@ -1,5 +1,6 @@
 """세션 생명주기. 권한(user_id) 확인은 모두 여기서 한다."""
 
+import secrets
 import uuid
 from datetime import UTC, datetime
 
@@ -56,6 +57,26 @@ def get_owned_session(db: DbSession, session_id: uuid.UUID, user_id: uuid.UUID) 
     if s is None or s.user_id != user_id:
         # 존재하지 않음과 내 것이 아님을 구분하지 않는다 (설계 5절)
         raise HTTPException(status.HTTP_404_NOT_FOUND, "세션을 찾을 수 없습니다.")
+    return s
+
+
+def create_share_link(db: DbSession, s: Session) -> str:
+    """공유 토큰을 발급한다. 이미 있으면 기존 값을 그대로 돌려준다(재발급 아님)."""
+    if not s.share_token:
+        s.share_token = secrets.token_urlsafe(32)
+        db.commit()
+    return s.share_token
+
+
+def revoke_share_link(db: DbSession, s: Session) -> None:
+    s.share_token = None
+    db.commit()
+
+
+def get_session_by_share_token(db: DbSession, share_token: str) -> Session:
+    s = db.scalar(select(Session).where(Session.share_token == share_token))
+    if s is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "존재하지 않거나 만료된 링크입니다.")
     return s
 
 

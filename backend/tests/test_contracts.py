@@ -5,7 +5,7 @@ from app.analysis.types import ATTENTION_LABELS, EMOTION_LABELS
 
 SESSION_KEYS = {"id", "mode", "status", "created_at", "started_at", "finished_at", "questions", "ws_url"}
 SESSION_Q_KEYS = {"order_index", "question_id", "text", "started_at", "ended_at"}
-LIST_ITEM_KEYS = {"id", "mode", "status", "created_at", "finished_at", "has_report"}
+LIST_ITEM_KEYS = {"id", "mode", "status", "created_at", "finished_at", "has_report", "share_token"}
 REPORT_KEYS = {
     "session_id",
     "duration_ms",

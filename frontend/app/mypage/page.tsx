@@ -15,6 +15,7 @@ type SessionItem = {
   created_at: string;
   finished_at: string | null;
   has_report: boolean;
+  share_token: string | null;
 };
 
 type SessionListResponse = {
@@ -166,8 +167,30 @@ function GazeTrendChart({ items, listState }: { items: SessionItem[]; listState:
   );
 }
 
-function HistoryList({ items, state }: { items: SessionItem[]; state: FetchState }) {
+function HistoryList({
+  items,
+  state,
+  onRevokeShare,
+}: {
+  items: SessionItem[];
+  state: FetchState;
+  onRevokeShare: (id: string) => void;
+}) {
   const router = useRouter();
+  const [revoking, setRevoking] = useState<string | null>(null);
+
+  const revokeShare = async (id: string) => {
+    setRevoking(id);
+    try {
+      const res = await apiFetch(`/api/sessions/${id}/share`, { method: 'DELETE' });
+      if (!res.ok) throw new Error(`DELETE /api/sessions/${id}/share → ${res.status}`);
+      onRevokeShare(id);
+    } catch (e) {
+      console.warn('[mypage] 공유 링크 취소 실패', e);
+    } finally {
+      setRevoking(null);
+    }
+  };
 
   if (state === 'loading') {
     return (
@@ -219,6 +242,22 @@ function HistoryList({ items, state }: { items: SessionItem[]; state: FetchState
                 <span style={{ fontSize: 13, color: 'var(--ink-muted)' }}>리포트 없음</span>
               )}
             </div>
+            {clickable && item.share_token && (
+              <div style={{ marginTop: 10 }}>
+                <button
+                  type="button"
+                  className="btn-ghost"
+                  style={{ padding: '6px 14px', fontSize: 13 }}
+                  disabled={revoking === item.id}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    void revokeShare(item.id);
+                  }}
+                >
+                  {revoking === item.id ? '취소하는 중…' : '공유 링크 취소'}
+                </button>
+              </div>
+            )}
           </div>
         );
       })}
@@ -253,10 +292,14 @@ function SessionsSection() {
     };
   }, []);
 
+  const handleRevokeShare = (id: string) => {
+    setItems((prev) => prev.map((it) => (it.id === id ? { ...it, share_token: null } : it)));
+  };
+
   return (
     <>
       <GazeTrendChart items={items} listState={state} />
-      <HistoryList items={items} state={state} />
+      <HistoryList items={items} state={state} onRevokeShare={handleRevokeShare} />
     </>
   );
 }
