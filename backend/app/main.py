@@ -35,6 +35,7 @@ SEED_QUESTIONS = [
     ("개발자와 협업하며 겪은 어려움과 해결 방법을 말씀해주세요.", "experience", "design"),
     ("디자인 시스템을 구축하거나 활용한 경험이 있나요?", "experience", "design"),
     ("피드백을 받고 디자인을 수정했던 경험을 설명해주세요.", "general", "design"),
+    ("업로드한 영상 전체에 대한 답변", "upload", "upload"),
 ]
 
 

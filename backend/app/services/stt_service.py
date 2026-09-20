@@ -87,8 +87,8 @@ async def _run_stt(session_id: uuid.UUID, client: InferenceClient) -> None:
     if not get_settings().stt_enabled:
         set_status(session_id, "stt", "skipped")
         return
-    src = rec.final_path(session_id)
-    if not src.exists():
+    src = rec.playable_path(session_id)
+    if src is None:
         set_status(session_id, "stt", "skipped")
         return
     set_status(session_id, "stt", "running")

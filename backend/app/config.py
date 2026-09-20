@@ -30,6 +30,7 @@ class Settings(BaseSettings):
         default=5.0, description="세션 종료 후 이 시간까지 도착한 조각은 허용"
     )
     recording_max_chunk_bytes: int = Field(default=5_000_000)
+    upload_max_bytes: int = Field(default=300_000_000, description="사전 녹화 영상 업로드 최대 크기")
 
     # STT / LLM (guideline/05). 구현 전까지 리포트 status 는 skipped
     stt_enabled: bool = Field(default=False)

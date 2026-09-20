@@ -16,6 +16,8 @@ from app.config import get_settings
 
 log = logging.getLogger("selffit.recording")
 FINAL_NAME = "recording.webm"
+ORIGINAL_GLOB = "original.*"
+ALLOWED_UPLOAD_EXTS = {".mp4", ".webm", ".mov", ".mkv"}
 
 
 def session_dir(session_id: uuid.UUID) -> Path:
@@ -28,6 +30,29 @@ def chunk_path(session_id: uuid.UUID, seq: int) -> Path:
 
 def final_path(session_id: uuid.UUID) -> Path:
     return session_dir(session_id) / FINAL_NAME
+
+
+def original_path(session_id: uuid.UUID) -> Path | None:
+    """업로드된 사전 녹화 영상 원본. 없으면 None."""
+    matches = sorted(session_dir(session_id).glob(ORIGINAL_GLOB))
+    return matches[0] if matches else None
+
+
+def save_original(session_id: uuid.UUID, filename: str, data: bytes) -> Path:
+    """업로드된 영상 파일 원본을 media/{session_id}/original.{ext} 로 저장."""
+    ext = Path(filename).suffix.lower()
+    if ext not in ALLOWED_UPLOAD_EXTS:
+        ext = ".mp4"
+    p = session_dir(session_id) / f"original{ext}"
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_bytes(data)
+    return p
+
+
+def playable_path(session_id: uuid.UUID) -> Path | None:
+    """분석·재생 가능한 영상 파일. 실시간 세션은 recording.webm, 업로드 세션은 original.*"""
+    f = final_path(session_id)
+    return f if f.exists() else original_path(session_id)
 
 
 def save_chunk(session_id: uuid.UUID, seq: int, data: bytes) -> Path:
@@ -98,9 +123,9 @@ def duration_ms(path: Path) -> int | None:
 
 
 def info(session_id: uuid.UUID) -> dict | None:
-    """리포트용. 합쳐진 영상이 있으면 {url, duration_ms}."""
-    f = final_path(session_id)
-    if not f.exists():
+    """리포트용. 재생 가능한 영상이 있으면 {url, duration_ms}."""
+    f = playable_path(session_id)
+    if f is None:
         return None
     return {"url": f"/api/sessions/{session_id}/recording", "duration_ms": duration_ms(f)}
 

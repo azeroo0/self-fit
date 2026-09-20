@@ -31,6 +31,14 @@ def create_session(db: DbSession, user_id: uuid.UUID, mode: str, question_ids: l
         if missing:
             raise HTTPException(status.HTTP_400_BAD_REQUEST, f"없는 질문 id: {missing}")
         ordered = [by_id[i] for i in question_ids]
+    elif mode == "upload":
+        # 업로드 영상은 질문 구간이 없으므로 영상 전체를 답변 하나로 취급한다.
+        q = db.scalar(
+            select(Question)
+            .where(Question.category == "upload", Question.is_active.is_(True))
+            .order_by(Question.sort_order)
+        )
+        ordered = [q] if q else list_active_questions(db)[:1]
     else:
         ordered = list_active_questions(db)
     if not ordered:
