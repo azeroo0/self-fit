@@ -278,12 +278,14 @@ const LandingPage: React.FC = () => {
               <p>질문 리스트를 따라 면접을 진행하는 동안<br />안구, 표정 모델이 계속 관찰하고<br />일정 시간 이상 지속되면 토스트로 즉시 알려줍니다.</p>
               <Link className="track-link" href="/interview">면접 시작하기 →</Link>
             </div>
-            <div className="track-visual">
-              <img
-                src="/track-live.png"
-                alt="면접 화면에서 시선과 표정을 실시간으로 분석하고 토스트로 알려주는 모습"
-                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-              />
+            <div className="track-visual track-visual--photo">
+              <div className="visual-frame">
+                <img
+                  src="/track-live.png"
+                  alt="면접 화면에서 시선과 표정을 실시간으로 분석하고 토스트로 알려주는 모습"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', borderRadius: 10 }}
+                />
+              </div>
             </div>
           </div>
 
